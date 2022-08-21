@@ -30,12 +30,16 @@ local function executeTweenInstanceFull(target, time, style, dir, repCount, rev,
 	tween:Play()
 end
 
-astraTween.FireClientTweenModel.OnClientEvent:Connect(function(model, time, style, dir, endCF)
-	coroutine.wrap(executeTweenModel)(model, time, style, dir, endCF)
-end)
-astraTween.FireClientTweenInstance.OnClientEvent:Connect(function(target, time, style, dir, goalTable)
-	coroutine.wrap(executeTweenInstance)(target, time, style, dir, goalTable)
-end)
-astraTween.FireClientTweenInstanceFull.OnClientEvent:Connect(function(target, time, style, direction, repCount, reverses, delayTime, goalTable)
-	coroutine.wrap(executeTweenInstanceFull)(target, time, style, direction, repCount, reverses, delayTime, goalTable)
+-- Name to Function dict for remoteevent names (used in below function)
+local NtF = {
+	["FireClientTweenModel"] = executeTweenModel,
+	["FireClientTweenInstance"] = executeTweenInstance,
+	["FireClientTweenInstanceFull"] = executeTweenInstanceFull,
+}
+
+-- Block to connect RemoteEvents as they are made, removes the need for pre-making remote events
+astraTween.ChildAdded:Connect(function(child)
+	if child.ClassName == "RemoteEvent" and NtF[child.Name] then
+		require(astraTween):getRemote(child.Name).OnClientEvent:Connect(NtF[child.Name])
+	end	
 end)

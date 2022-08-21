@@ -1,18 +1,42 @@
 --[[
-IMPORTANT!!!!!! THE MODULE WILL NOT WORK IF YOU DO NOT FOLLOW THESE STEPS
-You need to add 3 RemoteEvents as children of this modulescript. I would add
-an auto-setup if I knew how (would need a server script to do setup and that would complicate things :/)
+DOCS
 
-Name them the following:
-"FireClientTweenInstance"
-"FireClientTweenInstanceFull"
-"FireClientTweenModel"
+AstraTween:TweenModel(model:Model, time:number, style:Enum.EasingStyle, direction:Enum.EasingDirection, goal:CFrame|Vector3|BasePart|UnionOperation)
+   Tweens a model using the PrimaryPart as a pivot. PrimaryPart must be set for this to work.
+
+TweenInstance(target:Instance, time:number, style:Enum.EasingStyle, direction:Enum.EasingDirection, goalTable:{Property = goalValue, ...})
+   Tweens an instance. goalTable follows same structure as TweenService:Create().
+
+TweenInstanceFull(target:Instance, time:number, style:Enum.EasingStyle, direction:Enum.EasingDirection, repCount:number, reverses:boolean, delayTime:number, goalTable:{Property = goalValue, ...})
+   Tweens an instance. Used to access lesser used arguments. (repCount, reverses, delayTime)
+   Functionally identical to TweenService:Create(), goalTable uses same structure.
 
 ]]--
 
 -- MODULESCRIPT (Should be placed in ReplicatedStorage)
-local ts = game:GetService("TweenService")
 local AstraTween = {}
+
+local _fireCTIrem, _fireCTIFrem, _fireCTMrem = nil,nil,nil -- fireClientTweenInstance, fireClientTweenInstanceFull, fireClientTweenModel (will be set later)
+
+local remotes = {["FireClientTweenInstance"] = _fireCTIrem, ["FireClientTweenInstanceFull"] = _fireCTIFrem, ["FireClientTweenModel"] = _fireCTMrem}
+
+function AstraTween:getRemote(name):RemoteEvent
+	if remotes[name] then
+		return remotes[name]
+	else
+		local named = script:FindFirstChild(name)
+		if named then
+			remotes[name] = named
+			return named
+		end
+
+		local newRemote = Instance.new("RemoteEvent")
+		newRemote.Name = name
+		newRemote.Parent = script
+		remotes[name] = newRemote
+		return newRemote
+	end
+end
 
 function AstraTween:checkStyle(input)
 	if typeof(input) == "EnumItem" then
@@ -44,20 +68,6 @@ function AstraTween:checkModel(input)
 		end
 	else
 		warn("TweenModel: Target is not a model!")
-		return input
-	end
-end
-
-function AstraTween:checkUIInput(input)
-	if typeof(input) == "Instance" then
-		if input:IsA("UIComponent") then
-			return input
-		else
-			warn("TweenModel: Target is not a UI component!")
-			return input
-		end
-	else
-		warn("TweenModel: Target is not a instance!")
 		return input
 	end
 end
@@ -95,55 +105,52 @@ function AstraTween:checkGoalCFrame(input)
 end
 
 function AstraTween:TweenModel(model:Model, time:number, style:Enum.EasingStyle, direction:Enum.EasingDirection, goalPosition)
-	coroutine.wrap(function()	
-		local model = AstraTween:checkModel(model)
-		local style = AstraTween:checkStyle(style)
-		local dir = AstraTween:checkDir(direction)
-		local endCF = AstraTween:checkGoalCFrame(goalPosition)
-		if model.PrimaryPart then
-			script.FireClientTweenModel:FireAllClients(model, time, style, dir, endCF)
-			wait(time)
+	local model = AstraTween:checkModel(model)
+	local style = AstraTween:checkStyle(style)
+	local dir = AstraTween:checkDir(direction)
+	local endCF = AstraTween:checkGoalCFrame(goalPosition)
+
+	if model.PrimaryPart then
+		AstraTween:getRemote("FireClientTweenModel"):FireAllClients(model, time, style, dir, endCF)
+		task.delay(time, function()
 			model:PivotTo(endCF)	
-		else
-			warn("Model does not have a PrimaryPart!")
-			return
-		end
-	end)()
+		end)
+	else
+		warn("Model does not have a PrimaryPart!")
+		return
+	end
 end
 
 function AstraTween:TweenInstance(target:Instance, time:number, style:Enum.EasingStyle, direction:Enum.EasingDirection, goalTable)
-	coroutine.wrap(function()
-		target = AstraTween:checkInstanceInput(target)
-		style = AstraTween:checkStyle(style)
-		direction = AstraTween:checkDir(direction)
-		goalTable = AstraTween:CheckGoalTable(goalTable)
+	target = AstraTween:checkInstanceInput(target)
+	style = AstraTween:checkStyle(style)
+	direction = AstraTween:checkDir(direction)
+	goalTable = AstraTween:CheckGoalTable(goalTable)
 
-		if target then
-			script.FireClientTweenInstance:FireAllClients(target, time, style, direction, goalTable)
-			wait(time)
+	if target then
+		AstraTween:getRemote("FireClientTweenInstance"):FireAllClients(target, time, style, direction, goalTable)
+		task.delay(time, function()
 			for i, v in pairs(goalTable) do
 				target[i] = v
 			end
-		end
-	end)()
+		end)
+	end
 end
 
 function AstraTween:TweenInstanceFull(target:Instance, time:number, style:Enum.EasingStyle, direction:Enum.EasingDirection, repCount:number, reverses:boolean, delayTime:number, goalTable)
-	coroutine.wrap(function()
-		target = AstraTween:checkInstanceInput(target)
-		style = AstraTween:checkStyle(style)
-		direction = AstraTween:checkDir(direction)
-		goalTable = AstraTween:CheckGoalTable(goalTable)
+	target = AstraTween:checkInstanceInput(target)
+	style = AstraTween:checkStyle(style)
+	direction = AstraTween:checkDir(direction)
+	goalTable = AstraTween:CheckGoalTable(goalTable)
 
-		if target then
-			script.FireClientTweenInstanceFull:FireAllClients(target, time, style, direction, repCount, reverses, delayTime, goalTable)
-			wait(time)
+	if target then
+		AstraTween:getRemote("FireClientTweenInstanceFull"):FireAllClients(target, time, style, direction, repCount, reverses, delayTime, goalTable)
+		task.delay(time, function()
 			for i, v in pairs(goalTable) do
 				target[i] = v
 			end
-		end
-	end)()
+		end)
+	end
 end
 
 return AstraTween
-
