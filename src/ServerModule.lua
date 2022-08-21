@@ -1,3 +1,15 @@
+--[[
+IMPORTANT!!!!!! THE MODULE WILL NOT WORK IF YOU DO NOT FOLLOW THESE STEPS
+You need to add 3 RemoteEvents as children of this modulescript. I would add
+an auto-setup if I knew how (would need a server script to do setup and that would complicate things :/)
+
+Name them the following:
+"FireClientTweenInstance"
+"FireClientTweenInstanceFull"
+"FireClientTweenModel"
+
+]]--
+
 -- MODULESCRIPT (Should be placed in ReplicatedStorage / ServerScriptService)
 local ts = game:GetService("TweenService")
 local AstraTween = {}
