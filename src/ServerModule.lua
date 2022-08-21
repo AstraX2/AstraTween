@@ -10,7 +10,7 @@ Name them the following:
 
 ]]--
 
--- MODULESCRIPT (Should be placed in ReplicatedStorage / ServerScriptService)
+-- MODULESCRIPT (Should be placed in ReplicatedStorage)
 local ts = game:GetService("TweenService")
 local AstraTween = {}
 
