@@ -30,12 +30,6 @@ local function executeTweenInstanceFull(target, time, style, dir, repCount, rev,
 	tween:Play()
 end
 
-astraTween.FireClientTweenModel.OnClientEvent:Connect(function(model, time, style, dir, endCF)
-	coroutine.wrap(executeTweenModel)(model, time, style, dir, endCF)
-end)
-astraTween.FireClientTweenInstance.OnClientEvent:Connect(function(target, time, style, dir, goalTable)
-	coroutine.wrap(executeTweenInstance)(target, time, style, dir, goalTable)
-end)
-astraTween.FireClientTweenInstanceFull.OnClientEvent:Connect(function(target, time, style, direction, repCount, reverses, delayTime, goalTable)
-	coroutine.wrap(executeTweenInstanceFull)(target, time, style, direction, repCount, reverses, delayTime, goalTable)
-end)
+astraTween:getRemote("FireClientTweenModel").OnClientEvent:Connect(executeTweenModel)
+astraTween:getRemote("FireClientTweenInstance").OnClientEvent:Connect(executeTweenInstance)
+astraTween:getRemote("FireClientTweenInstanceFull").OnClientEvent:Connect(executeTweenInstanceFull)
