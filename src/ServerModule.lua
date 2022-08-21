@@ -27,7 +27,7 @@ local _fireCTIrem, _fireCTIFrem, _fireCTMrem -- fireClientTweenInstance, fireCli
 
 local remotes = {["FireClientTweenInstance"] = _fireCTIrem, ["FireClientTweenInstanceFull"] = _fireCTIFrem, ["FireClientTweenModel"] = _fireCTMrem}
 
-local function getRemote(name):RemoteEvent
+function AstraTween:getRemote(name):RemoteEvent
   if remotes[name] then
     return remotes[name]
   else
@@ -118,7 +118,7 @@ function AstraTween:TweenModel(model:Model, time:number, style:Enum.EasingStyle,
 	local endCF = AstraTween:checkGoalCFrame(goalPosition)
                         
 	if model.PrimaryPart then
-		getRemote("FireClientTweenModel"):FireAllClients(model, time, style, dir, endCF)
+		AstraTween:getRemote("FireClientTweenModel"):FireAllClients(model, time, style, dir, endCF)
 		task.delay(time, function()
 		        model:PivotTo(endCF)	
                 end)
@@ -135,7 +135,7 @@ function AstraTween:TweenInstance(target:Instance, time:number, style:Enum.Easin
 	goalTable = AstraTween:CheckGoalTable(goalTable)
 
 	if target then
-		getRemote("FireClientTweenInstance"):FireAllClients(target, time, style, direction, goalTable)
+		AstraTween:getRemote("FireClientTweenInstance"):FireAllClients(target, time, style, direction, goalTable)
 		task.delay(time, function()
 		        for i, v in pairs(goalTable) do
 			        target[i] = v
@@ -151,7 +151,7 @@ function AstraTween:TweenInstanceFull(target:Instance, time:number, style:Enum.E
 	goalTable = AstraTween:CheckGoalTable(goalTable)
 	
         if target then
-		getRemote("FireClientTweenInstanceFull"):FireAllClients(target, time, style, direction, repCount, reverses, delayTime, goalTable)
+		AstraTween:getRemote("FireClientTweenInstanceFull"):FireAllClients(target, time, style, direction, repCount, reverses, delayTime, goalTable)
 		task.delay(time, function()
 		        for i, v in pairs(goalTable) do
 		        	target[i] = v
