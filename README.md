@@ -4,7 +4,7 @@ AstraTween is a basic client tweening and model tweening module for Roblox to im
 AstraTween is pretty limited, as it currently does not have support for pausing/cancelling tweens once they begin. Any ideas for how to implement new features would be greatly appreciated.
 
 # Setup
-To set up AstraTween, create a ModuleScript and a LocalScript. The ModuleScript (which should be named "AstraTween") should be a descendant of `ReplicatedStorage`. The LocalScript should be a descendant of `StarterPlayerScripts`. Copy in the code from `/src/` and you should be good to go! Use the documentation below in order to use AstraTween from any other server script.
+To set up AstraTween, create a ModuleScript and a LocalScript. The ModuleScript (which should be named "AstraTween") should be a descendant of `ReplicatedStorage`. The LocalScript should be a descendant of `StarterPlayerScripts`. Copy in the code from `/src/`, change the parent path in the beginning of the LocalScript, and you should be good to go! Use the documentation below in order to use AstraTween from any other server script.
 
 
 ### UPDATE 0 SETUP INSTRUCTIONS (DO NOT USE FOR LATEST VERSION)
