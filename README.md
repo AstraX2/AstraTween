@@ -6,12 +6,6 @@ AstraTween is pretty limited, as it currently does not have support for pausing/
 # Setup
 To set up AstraTween, create a ModuleScript and a LocalScript. The ModuleScript (which should be named "AstraTween") should be a descendant of `ReplicatedStorage`. The LocalScript should be a descendant of `StarterPlayerScripts`. Copy in the code from `/src/`, change the parent path in the beginning of the LocalScript, and you should be good to go! Use the documentation below in order to use AstraTween from any other server script.
 
-
-### UPDATE 0 SETUP INSTRUCTIONS (DO NOT USE FOR LATEST VERSION)
-> To set up AstraTween, create a ModuleScript and a LocalScript. The ModuleScript (which should be named "AstraTween") should be a descendant of `ReplicatedStorage`. Create 3 RemoteEvents as children of the ModuleScript and name them `FireClientTweenInstance`, `FireClientTweenInstanceFull`, and `FireClientTweenModel`. **The module will not function if you do not do this!**
-Secondly, take the LocalScript (name it "AstraTweenLocal") and place it as a descendant of `StarterPlayerScripts`. 
-Lastly, paste the code from `/src/` into each of the scripts. Make sure to set the `rootPath` variable on line 1 of the LocalScript to the parent of the module. From there, use the following documentation to run client tweens from any other Server-sided script. **Do not attempt to use this locally. Using TweenService is functionally identical to using AstraTween client-sided, and is much less complex.**
-
 # Documentation
 
 ## AstraTween:TweenModel(model, time, style, dir, goalPosition)
