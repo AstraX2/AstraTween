@@ -37,9 +37,16 @@ local NtF = {
 	["FireClientTweenInstanceFull"] = executeTweenInstanceFull,
 }
 
--- Block to connect RemoteEvents as they are made, removes the need for pre-making remote events
-astraTween.ChildAdded:Connect(function(child)
+local function connectChild(child: Instance)
 	if child.ClassName == "RemoteEvent" and NtF[child.Name] then
 		require(astraTween):getRemote(child.Name).OnClientEvent:Connect(NtF[child.Name])
 	end	
-end)
+end
+
+-- Block to connect RemoteEvents as they are made, removes the need for pre-making remote events
+astraTween.ChildAdded:Connect(connectChild)
+
+for _, child in astraTween:GetChildren() do
+	task.defer(connectChild, child)
+end
+
